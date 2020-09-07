@@ -58,7 +58,12 @@ ROOT_URLCONF = 'twitterclone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            '/a_twitter_clone/tweet/templates',
+            '/a_twitter_clone/twitteruser/templates',
+            '/a_twitter_clone/authentication/templates',
+            '/a_twitter_clone/notification/templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,3 +127,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'twitteruser.MyTwitterUser'

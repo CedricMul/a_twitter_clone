@@ -1,0 +1,15 @@
+<a href="/logout/"><button>Logout</button></a>
+<a href="/make_tweet/"><button>Tweet!</button></a>
+<a href="/notifications/"><button>Notifications: {{ notes }}</button></a>
+<a href="/"><button>Home</button></a>
+<a href="/profile/"><button>Profile</button></a>
+
+<h3>Welcome, {{ current_user.username }}!</h3>
+<h4>Following: {{ follow_int }}</h4>
+
+{% for p in posts %}
+    <p><b><a href="/view_user/{{ p.user_tweeted.id }}">{{ p.user_tweeted.username }}</a></b></p>
+    <p>{{ p.content }}</p>
+    <p>{{ p.date_and_time }}</p>
+    <p><a href="/tweet_detail/{{ p.id }}/">View Tweet</a></p>
+{% endfor %}

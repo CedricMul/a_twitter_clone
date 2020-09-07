@@ -1,0 +1,18 @@
+<a href="/login/"><button>Login</button></a>
+<a href="/logout/"><button>Logout</button></a>
+<a href="/make_tweet/"><button>Tweet!</button></a>
+<a href="/notifications/"><button>Notifications: {{ notes }}</button></a>
+<a href="/"><button>Home</button></a>
+<a href="/profile/"><button>Profile</button></a>
+
+{{ notifications }}
+{% for n in notifications %}
+    {{ n }}
+    <h6>
+        {{ n.tweet.tweeted_by.username }} mentioned you in 
+        a <a href="/tweet_detail/{{ n.tweet.id }}/">tweet!</a>
+    </h6>
+    <p>
+        {{ n.tweet.content }}
+    </p>
+{% endfor %}

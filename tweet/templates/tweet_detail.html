@@ -1,0 +1,10 @@
+<a href="/login/"><button>Login</button></a>
+<a href="/logout/"><button>Logout</button></a>
+<a href="/make_tweet/"><button>Tweet!</button></a>
+<a href="/notifications/"><button>Notifications: {{ notes }}</button></a>
+<a href="/"><button>Home</button></a>
+<a href="/profile/"><button>Profile</button></a>
+
+<h3><a href="/view_user/{{ tweet.user_tweeted.id }}">{{ tweet.user_tweeted.username }}</a></h3>
+<p>{{ tweet.content }}</p>
+<p>{{ tweet.date_and_time }}</p>
