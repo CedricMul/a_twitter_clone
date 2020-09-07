@@ -16,6 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import twitteruser.views
+import tweet.views
+import authentication.views
+import notification.views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', authentication.views.home_view, name='home'),
+    path('tweet_detail/<int:id>/', tweet.views.tweet_detail_view),
+    path('login/', authentication.views.login_view, name='login'),
+    path('logout/', authentication.views.logout_view),
+    path('make_tweet/', tweet.views.post_tweet_view),
+    path('notifications/', notification.views.notification_view),
+    path('profile/', twitteruser.views.user_profile_view),
+    path('view_user/<int:id>/', twitteruser.views.user_detail_view),
+    path('new_user/', authentication.views.create_user_view),
+    path('following/<int:id>/', twitteruser.views.follow_view)
 ]
