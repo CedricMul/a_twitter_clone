@@ -1,5 +1,8 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
 
 # Reads contents of tweet for a name following an @
 from tweet.reg_helper import read_reggie
@@ -44,6 +47,39 @@ def post_tweet_view(request):
     form = PostTweetForm()
     return render(request, 'tweet_form.html', {'form': form, 'notes': notes})
 
+class PostTweetView(LoginRequiredMixin, TemplateView):
+    def get(self, request):
+        current_user = request.user
+        notes = len(Notification.objects.filter(notify_user=current_user).filter(is_seen=False))
+        form = PostTweetForm()
+        return render(request, 'tweet_form.html', {'form': form, 'notes': notes})
+    
+    def post(self, request):
+        if request.method == "POST":
+            form = PostTweetForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                new_tweet = Tweet(
+                    user_tweeted=current_user,
+                    content=data.get('content'),
+                    #date_and_time=data.get('date_and_time')
+                )
+                new_tweet.save()
+                # Either gets after "@" or returns false
+                notify = read_reggie(data.get('content'))
+                if notify:
+                    # Gets user being "@" @ by the username in the mention
+                    #note_user = MyTwitterUser.objects.get(username=notify)
+                    for name in notify:
+                        Notification.objects.create(
+                            # Attributes user
+                            notify_user=MyTwitterUser.objects.get(username=name),
+                            # Gets tweet obj
+                            tweet=new_tweet,
+                            is_seen=False
+                        )
+                return HttpResponseRedirect(reverse('home'))
+
 def tweet_detail_view(request, id):
     if request.user.is_authenticated:
         current_user = request.user
@@ -59,3 +95,21 @@ def tweet_detail_view(request, id):
             'tweet': tweet,
             'notes': notes
         })
+
+class TweetDetailView(DetailView):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            current_user = request.user
+            notes = Notification.objects.filter(notify_user=current_user
+            ).filter(is_seen=False).count()
+        else:
+            notes = 0
+        tweet = Tweet.objects.get(id=id)
+        return render(
+            request,
+            'tweet_detail.html',
+            {
+                'tweet': tweet,
+                'notes': notes
+            })

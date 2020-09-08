@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.views.generic.base import TemplateView
 
 from twitteruser.models import MyTwitterUser
 from tweet.models import Tweet
@@ -23,6 +24,24 @@ def create_user_view(request):
     form = UserCreateForm()
     return render(request, 'auth_forms.html', {'form': form})
 
+class CreateUserView(TemplateView):
+    def get(self, request):
+        form = UserCreateForm()
+        return render(request, 'auth_forms.html', {'form': form})
+    
+    def post(self, request):
+        form = UserCreateForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            new_user = MyTwitterUser.objects.create_user(
+                username=data.get('username'),
+                password=data.get('password')
+            )
+            new_user.following.add(new_user)
+            if new_user:
+                login(request, new_user)
+                return HttpResponseRedirect(reverse('home'))
+
 def login_view(request):
     if request.method == "POST":
         form = SignInForm(request.POST)
@@ -37,6 +56,23 @@ def login_view(request):
                 return HttpResponseRedirect(reverse('home'))
     form = SignInForm()
     return render(request, 'auth_forms.html', {'form': form})
+
+class LoginView(TemplateView):
+    def get(self, request):
+        form = SignInForm()
+        return render(request, 'auth_forms.html', {'form': form})
+    
+    def post(self, request):
+        form = SignInForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            log_user = authenticate(
+                username=data.get('username'),
+                password=data.get('password')
+            )
+            if log_user:
+                login(request, log_user)
+                return HttpResponseRedirect(reverse('home'))
 
 def logout_view(request):
     logout(request)
