@@ -50,7 +50,8 @@ def home_view(request):
         follow_int = len(following) - 1
         # Remember to add User to own follow list
         posts = Tweet.objects.filter(user_tweeted__in=following).order_by('-date_and_time')
-        notes = Notification.objects.filter(notify_user=current_user.id).count()
+        notes = Notification.objects.filter(notify_user=current_user
+        ).filter(is_seen=False).count()
         return render(
             request,
             'homepage.html',

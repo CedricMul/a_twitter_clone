@@ -5,11 +5,11 @@ import re
 def read_reggie(string_content):
     # Starts with single '@', followed by multiple letters until
     # another character/space (maybe add numbers?)
-    rex = r"[@]([a-zA_Z]*)"
+    rex = r"@(\w+)"
     prex = re.compile(rex)
-    regged = prex.match(string_content)
+    regged = prex.findall(string_content)
     # If it captured a name in the grouping it returns a name string
     if regged:
-        return regged.group(1)
+        return regged
     else:
         return False

@@ -3,7 +3,10 @@ from twitteruser.models import MyTwitterUser
 from tweet.models import Tweet
 
 class Notification(models.Model):
-    notify_user = models.IntegerField()
+    notify_user = models.ForeignKey(
+        MyTwitterUser,
+        on_delete=models.CASCADE
+    )
     tweet = models.ForeignKey(
         Tweet,
         on_delete=models.CASCADE
