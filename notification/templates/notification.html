@@ -5,9 +5,7 @@
 <a href="/"><button>Home</button></a>
 <a href="/profile/"><button>Profile</button></a>
 
-{{ notifications }}
 {% for n in notifications %}
-    {{ n }}
     <h6>
         {{ n.tweet.tweeted_by.username }} mentioned you in 
         a <a href="/tweet_detail/{{ n.tweet.id }}/">tweet!</a>

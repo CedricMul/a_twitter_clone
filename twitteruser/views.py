@@ -9,7 +9,8 @@ def user_detail_view(request, id):
     if request.user:
         current_user = request.user
         # Gets number of notifications for current user
-        notes = len(Notification.objects.filter(notify_user=current_user.id))
+        notes = len(Notification.objects.filter(notify_user=current_user
+        ).filter(is_seen=False))
     else:
         current_user = None
         notes = 0
@@ -34,7 +35,8 @@ def user_profile_view(request):
     current_user = request.user
     posts = Tweet.objects.filter(user_tweeted=current_user)
     post_count = len(posts)
-    notes = Notification.objects.filter(notify_user=current_user.id).count()
+    notes = Notification.objects.filter(notify_user=current_user
+    ).filter(is_seen=False).count()
     follow_int = current_user.following.count() - 1
     return render(
         request,
